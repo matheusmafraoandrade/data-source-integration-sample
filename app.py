@@ -3,23 +3,27 @@
 import streamlit as st
 
 from utils.connections import check_bigquery_connectivity, check_hubspot_connectivity
+from utils.ui_helpers import apply_presentation_style, presentation_lead
 
 st.set_page_config(
-    page_title="Data Integration Hub",
+    page_title="Hub de Integração de Dados",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-st.title("Data Integration Hub")
-st.markdown(
-    """
-    Painel central com integrações **HubSpot CRM** e **Google BigQuery**.
-    Use a barra lateral para explorar os dashboards de cada fonte de dados.
-    """
+apply_presentation_style()
+
+st.title("📊 Hub de Integração de Dados")
+presentation_lead(
+    "Painel central com integrações <strong>HubSpot CRM</strong> e "
+    "<strong>Google BigQuery</strong>. "
+    "Use a barra lateral para explorar os dashboards de cada fonte de dados."
 )
 
-st.subheader("Status das conexões")
+st.divider()
+
+st.subheader("Status das Conexões")
 
 bq_ok, bq_message = check_bigquery_connectivity()
 hs_ok, hs_message = check_hubspot_connectivity()
@@ -27,7 +31,7 @@ hs_ok, hs_message = check_hubspot_connectivity()
 status_col1, status_col2 = st.columns(2)
 
 with status_col1:
-    st.metric(label="BigQuery", value="Online" if bq_ok else "Offline")
+    st.metric(label="Google BigQuery", value="Online" if bq_ok else "Offline")
     if bq_ok:
         st.caption(bq_message)
     else:
@@ -44,11 +48,13 @@ st.divider()
 
 st.markdown(
     """
-    ### Páginas disponíveis
+    ### Páginas Disponíveis
 
-    - **CRM Dashboard** — contatos e negócios do HubSpot
-    - **BigQuery Dashboard** — tabelas do dataset configurado
-    - **Analytics Dashboard** — visões cruzadas HubSpot × BigQuery
+    | Dashboard | Descrição |
+    |---|---|
+    | **HubSpot CRM** | Contatos e negócios do HubSpot |
+    | **BigQuery** | Tabelas do dataset configurado |
+    | **Analytics** | Visões cruzadas HubSpot × BigQuery |
     """
 )
 

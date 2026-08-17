@@ -3,13 +3,19 @@
 import streamlit as st
 
 from utils.hubspot_helpers import get_hubspot_contacts, get_hubspot_deals
+from utils.ui_helpers import apply_presentation_style, presentation_lead
 
-st.set_page_config(page_title="CRM Dashboard", page_icon="📊", layout="wide")
+st.set_page_config(page_title="HubSpot CRM", page_icon="🏢", layout="wide")
 
-st.title("CRM Dashboard")
-st.caption("Dados de contatos e negócios vindos do HubSpot CRM.")
+apply_presentation_style()
 
-st.sidebar.markdown("### Carregamento")
+st.title("🏢 HubSpot CRM")
+presentation_lead(
+    "Dados de <strong>contatos</strong> e <strong>negócios</strong> "
+    "sincronizados do HubSpot CRM."
+)
+
+st.sidebar.markdown("### ⚙️ Carregamento")
 fetch_mode = st.sidebar.radio(
     "Quantidade de registros",
     ["Prévia (100)", "Personalizado", "Todos"],
@@ -33,7 +39,9 @@ else:
     max_records = None
     st.sidebar.info("Buscando todos os registros. A primeira carga pode demorar.")
 
-contacts_tab, deals_tab = st.tabs(["Contatos", "Negócios"])
+st.divider()
+
+contacts_tab, deals_tab = st.tabs(["👤 Contatos", "💼 Negócios"])
 
 with contacts_tab:
     try:
@@ -42,11 +50,11 @@ with contacts_tab:
         metric_col1, metric_col2, metric_col3 = st.columns(3)
         metric_col1.metric("Contatos carregados", len(contacts_df))
         metric_col2.metric(
-            "Com origin",
+            "Com origem",
             int(contacts_df["origin"].notna().sum()) if not contacts_df.empty else 0,
         )
         metric_col3.metric(
-            "Com landing page id",
+            "Com ID de landing page",
             int(contacts_df["landing_page_id"].notna().sum())
             if not contacts_df.empty
             else 0,
@@ -59,8 +67,8 @@ with contacts_tab:
             column_config={
                 "nome": st.column_config.TextColumn("Nome"),
                 "data_de_inicio": st.column_config.TextColumn("Data de início"),
-                "landing_page_id": st.column_config.TextColumn("Landing page id"),
-                "origin": st.column_config.TextColumn("Origin"),
+                "landing_page_id": st.column_config.TextColumn("ID da landing page"),
+                "origin": st.column_config.TextColumn("Origem"),
                 "id_do_registro": st.column_config.TextColumn("ID do registro"),
             },
         )
@@ -78,7 +86,7 @@ with deals_tab:
             int(deals_df["nome_do_contato"].notna().sum()) if not deals_df.empty else 0,
         )
         metric_col3.metric(
-            "Com won date",
+            "Com data de fechamento",
             int(deals_df["won_date"].notna().sum()) if not deals_df.empty else 0,
         )
 
@@ -89,14 +97,14 @@ with deals_tab:
             column_config={
                 "nome_do_negocio": st.column_config.TextColumn("Nome do negócio"),
                 "lead_behavior_profile": st.column_config.TextColumn(
-                    "Lead behavior profile"
+                    "Perfil de comportamento"
                 ),
-                "lead_type": st.column_config.TextColumn("Lead type"),
+                "lead_type": st.column_config.TextColumn("Tipo de lead"),
                 "sales_representative": st.column_config.TextColumn(
-                    "Sales representative"
+                    "Representante comercial"
                 ),
                 "sdr": st.column_config.TextColumn("SDR"),
-                "won_date": st.column_config.TextColumn("Won date"),
+                "won_date": st.column_config.TextColumn("Data de fechamento"),
                 "nome_do_contato": st.column_config.TextColumn("Nome do contato"),
             },
         )
